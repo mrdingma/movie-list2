@@ -1,8 +1,3 @@
-
-
-// non class component
-// takes search obj and render divs
-
 import React from 'react';
 
 const AddListEntry = ({ movieObj, handleSelect }) => (

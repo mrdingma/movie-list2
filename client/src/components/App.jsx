@@ -3,7 +3,7 @@ import axios from 'axios';
 import Add from './Add.jsx';
 import Buttons from './Buttons.jsx';
 import Search from './Search.jsx';
-// import MovieList from './MovieList.jsx';
+import MovieList from './MovieList.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -15,32 +15,28 @@ class App extends Component {
       toggle: null
     };
 
-    this.refreshMovies = this.refreshMovies.bind(this);
+    this.handleUpdateWatch = this.handleUpdateWatch.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleToggleButtons = this.handleToggleButtons.bind(this);
+    this.handleAddMovie = this.handleAddMovie.bind(this);
   }
 
-  // ComponentDidMount() {
-  //   this.getAll()
-  // }
-
-  refreshMovies(data) {
-    this.setState({ movies: data });
+  componentDidMount() {
+    this.getAll()
   }
 
   getAll() {
     axios.get('/movies')
-      .then(function (response) {
-        console.log(response);
+      .then(({ data }) => {
+        this.setState({ movieList: data });
       })
       .catch(function (error) {
         console.log(error);
       })
-    // - get request to server for db info
-    // - set State "movies"
   }
 
-  saveOrUpdate(obj) {
+  //TODO
+  handleUpdateWatch(obj) {
     const options = {};
 
     axios.post('/movies', options)
@@ -53,19 +49,13 @@ class App extends Component {
   }
 
   handleAddMovie(obj) {
-    const movieId = obj.id;
-
-    axios.post(`/search/${movieId}`)
-      .then(function ({ data }) {
-        refreshSearchArr(data);
+    axios.post(`/movies/${obj.id}`)
+      .then(() => {
+        this.getAll();
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       })
-    // need to add watched: null
-    // need to filter out parts dont need
-    // need to save to db
-    // then add to movieList
   }
 
   handleSearch(text) {
@@ -73,28 +63,44 @@ class App extends Component {
   }
 
   handleToggleButtons(e) {
-    debugger;
-    this.setState({ toggle: Boolean(e.target.name) });
+    this.setState({ toggle: e.target.name });
+  }
+
+  filterList() {
+    // need to filter the movieList for search term and toggled
+    let movieList = this.state.movieList;
+    const searchText = this.state.search.toLowerCase();
+    const currentToggle = this.state.toggle;
+
+    if (searchText !== '') {
+      movieList = movieList.filter((movieObj) => {
+        return movieObj.original_title.toLowerCase().includes(searchText)
+      })
+    }
+
+    if (currentToggle !== null) {
+      movieList = movieList.filter((movieObj) => {
+        return movieObj.watched === currentToggle;
+      })
+    }
+
+    return movieList;
   }
 
   render() {
-    // need to filter the movieList for search term and toggled
+    console.log(this.state);
+
     return (
       <div>
         <h1>Movie List</h1>
-        <Add movieList={this.state.movieList} />
+        <Add movieList={this.state.movieList} handleAddMovie={this.handleAddMovie} />
+        <br></br>
         <Buttons handleToggleButtons={this.handleToggleButtons} />
         <Search handleSearch={this.handleSearch} />
+        <MovieList movieList={this.filterList()} handleUpdateWatch={this.handleUpdateWatch} />
       </div>
     );
   }
 }
 
 export default App;
-
-/*
-        <Add />
-        <Buttons />
-        <Search />
-        <MovieList />
-*/

@@ -1,5 +1,12 @@
+import React from 'react';
+import MovieListEntry from './MovieListEntry.jsx';
 
+const MovieList = ({ movieList, handleUpdateWatch }) => (
+  <div>
+    {
+      movieList.map((movieObj) => <MovieListEntry movieObj={movieObj} handleUpdateWatch={handleUpdateWatch} />)
+    }
+  </div>
+)
 
-// non class component
-// takes movieList array
-// pass function: handleToggleWatched(id) which updates the watched of that id boolean
+export default MovieList;

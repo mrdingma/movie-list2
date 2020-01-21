@@ -1,8 +1,3 @@
-
-
-// non class component
-// takes array of search results from Add, and maps to AddListEntry
-
 import React from 'react';
 import AddListEntry from './AddListEntry.jsx';
 

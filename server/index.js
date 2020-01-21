@@ -13,9 +13,9 @@ app.use(bodyParser.json())
 
 app.get('/search/:text', controllers.search.get)
 
-// app.get('/movies', controllers.movies.getAll)
+app.get('/movies', controllers.movies.getAll)
 
-app.post('/movies', controllers.movies.saveOrUpdate)
+app.post('/movies/:movieId', controllers.movies.save)
 
 
 app.listen(PORT, () => console.log('Listening on port: ' + PORT));

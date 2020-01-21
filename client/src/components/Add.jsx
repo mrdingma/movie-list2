@@ -27,7 +27,6 @@ class Add extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-    this.refreshSearchArr = this.refreshSearchArr.bind(this);
     this.initialize = this.initialize.bind(this);
   }
 
@@ -42,16 +41,12 @@ class Add extends Component {
     }
   }
 
-  refreshSearchArr(data) {
-    this.setState({ searchArr: data });
-  }
-
   getSearchResults(text) {
     const refreshSearchArr = this.refreshSearchArr;
 
     axios.get(`/search/${text}`)
-      .then(function ({ data }) {
-        refreshSearchArr(data);
+      .then(({ data }) => {
+        this.setState({ searchArr: data })
       })
       .catch(function (error) {
         console.log(error);
@@ -65,7 +60,7 @@ class Add extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.props.handleAddMovie(this.state.currentObj);
+    this.props.handleAddMovie(this.state.selectedObj);
     this.initialize();
   }
 
@@ -74,7 +69,6 @@ class Add extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <form onSubmit={this.onSubmit}>

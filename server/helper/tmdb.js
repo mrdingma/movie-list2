@@ -17,10 +17,27 @@ let getSearchResults = (text, cb) => {
     .catch(function (error) {
       cb(error)
     })
+}
 
+let lookUpById = (id, cb) => {
+  const url = `https://api.themoviedb.org/3/movie/${id}`
+
+  axios.get(url, {
+    params: {
+      api_key: config.TOKEN
+    }
+  })
+    .then(function (response) {
+      cb(null, response.data);
+    })
+    .catch(function (error) {
+      cb(error)
+    })
 }
 
 
+
 module.exports = {
-  getSearchResults
+  getSearchResults,
+  lookUpById
 }
