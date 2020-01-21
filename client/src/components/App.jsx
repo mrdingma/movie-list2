@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
-// import Add from './Add.jsx';
+import axios from 'axios';
+import Add from './Add.jsx';
 import Buttons from './Buttons.jsx';
 import Search from './Search.jsx';
 // import MovieList from './MovieList.jsx';
@@ -53,9 +53,19 @@ class App extends Component {
   }
 
   handleAddMovie(obj) {
-    // - TODO: add the watched: boolean field
-    //   - passed up from Add
-    //     - post request to server
+    const movieId = obj.id;
+
+    axios.post(`/search/${movieId}`)
+      .then(function ({ data }) {
+        refreshSearchArr(data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    // need to add watched: null
+    // need to filter out parts dont need
+    // need to save to db
+    // then add to movieList
   }
 
   handleSearch(text) {
@@ -72,8 +82,9 @@ class App extends Component {
     return (
       <div>
         <h1>Movie List</h1>
-        <Search handleSearch={this.handleSearch} />
+        <Add movieList={this.state.movieList} />
         <Buttons handleToggleButtons={this.handleToggleButtons} />
+        <Search handleSearch={this.handleSearch} />
       </div>
     );
   }
